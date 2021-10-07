@@ -2,10 +2,8 @@ package app;
 
 import model.Line;
 import model.Point;
-import rasterize.LineRasterizer;
-import rasterize.LineRasterizerGraphics;
-import rasterize.RasterBufferedImage;
-import rasterize.TrivialLineRasterizer;
+import model.Polygon;
+import rasterize.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -31,6 +29,9 @@ public class Controller2D {
 	private JPanel panel;
 	private RasterBufferedImage raster;
 	LineRasterizer lineRasterizer;
+	PolygonRasterizer polygonRasterizer;
+
+	Polygon polygon = new Polygon();
 
 	public Controller2D(int width, int height) {
 		JFrame frame = new JFrame();
@@ -42,6 +43,8 @@ public class Controller2D {
 
 		raster = new RasterBufferedImage(width, height);
 		lineRasterizer = new LineRasterizerGraphics(raster);
+		//lineRasterizer = new TrivialLineRasterizer(raster);
+		polygonRasterizer = new PolygonRasterizer(lineRasterizer);
 
 		panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -62,15 +65,13 @@ public class Controller2D {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON1)
-					raster.setPixel(e.getX(), e.getY(), 0xffff00);
-				if (e.getButton() == MouseEvent.BUTTON2)
-					raster.setPixel(e.getX(), e.getY(), 0xff00ff);
-				if (e.getButton() == MouseEvent.BUTTON3)
-					raster.setPixel(e.getX(), e.getY(), 0xffffff);
+					polygon.addPoint(new Point(e.getX(), e.getY()));
+
+				polygonRasterizer.rasterize(polygon);
 				panel.repaint();
 			}
 		});
-
+/*
 		panel.addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
@@ -87,6 +88,7 @@ public class Controller2D {
 				panel.repaint();
 			}
 		});
+ */
 	}
 
 	public void clear() {
@@ -99,6 +101,11 @@ public class Controller2D {
 
 	public void start() {
 		clear();
+
+		int a = 10;
+		int b = 7;
+		float c = a / (float) b;
+
 		panel.repaint();
 	}
 }

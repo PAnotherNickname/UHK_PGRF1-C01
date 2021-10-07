@@ -9,5 +9,22 @@ public class TrivialLineRasterizer extends LineRasterizer {
     @Override
     protected void drawLine(int x1, int y1, int x2, int y2) {
         // TODO: Implementace triviálního algoritmu
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+
+        float k = dy / (float)dx;
+        float q = y1 - k * x1;
+
+        if(x1 > x2) {
+            int tmp = x1;
+            x1 = x2;
+            x2 = tmp;
+        }
+
+        for (int x = x1; x <= x2; x++){
+            float y = k * x + q;
+            raster.setPixel(x, Math.round(y), this.color.getRGB());
+        }
+
     }
 }
