@@ -10,20 +10,19 @@ public class PolygonRasterizer {
         this.rasterizer = rasterizer;
     }
 
-    public void rasterize(Polygon polygon) {
-        if(polygon.getPointsCount() != 4)
-            return;
+    public void rasterize(Polygon polygon, boolean dashad) {
 
-        rasterizer.rasterize(new Line(polygon.getPoint(0), polygon.getPoint(1), 0xff0000));
-        rasterizer.rasterize(new Line(polygon.getPoint(1), polygon.getPoint(2), 0xff0000));
-        rasterizer.rasterize(new Line(polygon.getPoint(2), polygon.getPoint(3), 0xff0000));
-        rasterizer.rasterize(new Line(polygon.getPoint(3), polygon.getPoint(0), 0xff0000));
-
-        // pro všechny vrcholy polygonu
-        // {
-        // 1. vezmu aktuální vrchol
-        // 2. vezmu vrchol, který následuje - POZOR! co když už žádný další není?
-        // 3. mám 2 vrcholy, mohu spojit úsečkou
-        // }
+        for (int i = 0; i < polygon.getPointsCount() - 1; i++) {
+            if (i > 0) {
+                rasterizer.rasterize(new Line(polygon.getPoint(i - 1), polygon.getPoint(i), 0xff0000));
+            }
+            if (i == polygon.getPointsCount() - 2 && dashad) {
+                rasterizer.rasterizeDashed(new Line(polygon.getPoint(i), polygon.getPoint(i + 1), 0xff0000));
+                rasterizer.rasterizeDashed(new Line(polygon.getPoint(i + 1), polygon.getPoint(0), 0xff0000));
+            } else if (i == polygon.getPointsCount() - 2 && !dashad) {
+                rasterizer.rasterize(new Line(polygon.getPoint(i), polygon.getPoint(i + 1), 0xff0000));
+                rasterizer.rasterize(new Line(polygon.getPoint(i + 1), polygon.getPoint(0), 0xff0000));
+            }
+        }
     }
 }

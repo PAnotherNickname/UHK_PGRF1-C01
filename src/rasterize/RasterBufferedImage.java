@@ -7,10 +7,8 @@ public class RasterBufferedImage implements Raster {
 
     private final BufferedImage img;
     private int color;
+    private String modeString = "Jste v rezimu n-uhelnik, pro prepinani rezimu stisknete T, pro mazani C, pro redagovani prave tlacitko mysi";
 
-    public BufferedImage getImg() {
-        return img;
-    }
 
     public RasterBufferedImage(int width, int height) {
         img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -20,8 +18,16 @@ public class RasterBufferedImage implements Raster {
         graphics.drawImage(img, 0, 0, null);
     }
 
-    public Graphics getGraphics(){
+    public Graphics getGraphics() {
         return img.getGraphics();
+    }
+
+    public void setModeString(String modeString) {
+        this.modeString = modeString;
+    }
+
+    public BufferedImage getImg() {
+        return img;
     }
 
     @Override
@@ -31,7 +37,7 @@ public class RasterBufferedImage implements Raster {
 
     @Override
     public void setPixel(int x, int y, int color) {
-           img.setRGB(x, y, color);
+        img.setRGB(x, y, color);
     }
 
     @Override
@@ -39,6 +45,7 @@ public class RasterBufferedImage implements Raster {
         Graphics g = img.getGraphics();
         g.setColor(new Color(color));
         g.clearRect(0, 0, img.getWidth() - 1, img.getHeight() - 1);
+        this.img.getGraphics().drawString(modeString, 5, this.img.getHeight() - 5);
     }
 
     @Override

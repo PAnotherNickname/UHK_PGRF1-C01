@@ -8,7 +8,7 @@ public abstract class LineRasterizer {
     Raster raster;
     Color color;
 
-    public LineRasterizer(Raster raster){
+    public LineRasterizer(Raster raster) {
         this.raster = raster;
     }
 
@@ -30,5 +30,13 @@ public abstract class LineRasterizer {
         drawLine(x1, y1, x2, y2);
     }
 
+    public void rasterizeDashed(Line line) {
+        setColor(color);
+        dashedLine(line.getX1(), line.getY1(), line.getX2(), line.getY2());
+    }
+
     protected abstract void drawLine(int x1, int y1, int x2, int y2);
+
+    protected abstract void dashedLine(int x1, int y1, int x2, int y2);
 }
+
